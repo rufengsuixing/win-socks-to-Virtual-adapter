@@ -11,11 +11,11 @@
 修改start.bat 手动写入服务器地址列表(要求是ipv4地址)<br><br>
 在linux服务器端，通过winscp将linuxserver/badvpn-udpgw文件拷入  编译自https://github.com/ambrop72/badvpn<br>
 <h4>服务端如果要实现后台监听</h4>
-修改 udpgw.service 里面的badvpn-udpgw 位置和服务器ipv4<br>
+修改 udpgw.service 里面的badvpn-udpgw 位置和服务器ipv4地址<br>
 将 udpgw.service 复制到/etc/systemd/system/下<br>
 <code>systemctl daemon-reload</code><br>
 开机自启则 <code>systemctl enable udpgw.service</code></p>
 <h3>运行</h3>
 <p>
-linux 服务端<code>systemctl start udpgw.service</code> 或者 badvpn-udpgw --listen-addr [服务器ipv4]:7300<br>
+linux 服务端<code>systemctl start udpgw.service</code> 或者 <code>badvpn-udpgw --listen-addr [服务器ipv4]:7300</code><br>
 windows客户端右键管理员运行start.bat</p>
