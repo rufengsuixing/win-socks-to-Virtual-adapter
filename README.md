@@ -9,7 +9,7 @@
 <h3>安装</h3>
 <p>pc 将windowsclient文件夹里的内容拷到shadowsocksr目录下<br>
 修改start.bat 手动写入服务器地址列表(要求是ipv4地址)<br><br>
-在linux服务器端，通过winscp将badvpn-udpgw文件拷入  编译自https://github.com/ambrop72/badvpn<br>
+在linux服务器端，通过winscp将linuxserver/badvpn-udpgw文件拷入  编译自https://github.com/ambrop72/badvpn<br>
 <h4>服务端如果要实现后台监听</h4>
 修改 udpgw.service 里面的badvpn-udpgw 位置和服务器ipv4<br>
 将 udpgw.service 复制到/etc/systemd/system/下<br>
