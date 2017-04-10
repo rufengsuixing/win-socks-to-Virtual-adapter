@@ -1,14 +1,14 @@
 @echo off
 Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
-Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo ÇëÊ¹ÓÃÓÒ¼ü¹ÜÀíÔ±Éí·İÔËĞĞ£¡&&Pause >nul&&Exit)
+Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo è¯·ä½¿ç”¨å³é”®ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼&&Pause >nul&&Exit)
 Rd "%WinDir%\System32\test_permissions" 2>NUL
 NETSH WINHTTP RESET PROXY
 systeminfo>%~dp0tmpall.txt
 for /f "tokens=2 delims=:" %%a in ('findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" %~dp0tmpall.txt') do (set ip=%%a)
-if not defined ip echo ÇëÁ¬½ÓĞ£Ô°Íøºó¿ªÊ¼»òÕßÊ¹ÓÃÇ¿Á¦ĞŞ¸´ & pause & exit
-::»ñÈ¡gate£¨Ã»¿¼ÂÇÑÚÂë£©
+if not defined ip echo è¯·è¿æ¥æ ¡å›­ç½‘åå¼€å§‹æˆ–è€…ä½¿ç”¨å¼ºåŠ›ä¿®å¤ & pause & exit
+::è·å–gateï¼ˆæ²¡è€ƒè™‘æ©ç ï¼‰
 for /f "tokens=1,2 delims=. " %%a in ('echo %ip%') do (set gate=%%a.%%b.0.1)
-::»ñÈ¡Ö÷ÊÊÅäÆ÷Ãû³Æ
+::è·å–ä¸»é€‚é…å™¨åç§°
 for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" %~dp0tmpall.txt') do (set wei2=%%a)
 if not defined wei2 goto du
 set /a wei2=%wei2% - 5
@@ -20,12 +20,10 @@ netsh interface ip set interface %mainname% ignoredefaultroutes=disabled
 route add 0.0.0.0 mask 0.0.0.0 %gate%
 netsh interface ip set dns name=%mainname% source=dhcp
 netsh interface ip set address name=%mainname% source=dhcp
-echo Èç¹ûÃ»ÓĞĞŞ¸´Ê¹ÓÃÇ¿Á¦ĞŞ¸´
-
-
-
-
-
-
-
-
+echo å¦‚æœæ²¡æœ‰ä¿®å¤ä½¿ç”¨å¼ºåŠ›ä¿®å¤
+pause
+exit
+::åˆ é™¤å‰åç©ºæ ¼çš„å‡½æ•°
+:ie str 
+set "var=%~1"
+if "%var:~-1%"==" "  call :ie "%var:~0,-1%"
