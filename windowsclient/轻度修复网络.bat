@@ -25,6 +25,6 @@ echo 如果没有修复使用强力修复
 pause
 exit
 ::删除前后空格的函数
-:ie str 
+:ie str
 set "var=%~1"
 if "%var:~-1%"==" "  call :ie "%var:~0,-1%"
