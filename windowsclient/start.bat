@@ -30,9 +30,9 @@ for /f "tokens=1,2,3 delims=, " %%a in ('find /i "index" %~dp0gui-config.json') 
 ::if "%ser%"=="0" (set server=*.*.*.*:7300)
 ::if "%ser%"=="1" (set server=*.*.*.*:7300)
 ::-----------------------------------------------
-findstr /c "Windows 10" %~dp0tmpall.txt
+findstr /c:"Windows 10" %~dp0tmpall.txt
 if %errorlevel% == 0 set sy=1
-findstr /c "Windows 8" %~dp0tmpall.txt
+findstr /c:"Windows 8" %~dp0tmpall.txt
 if %errorlevel% == 0 set sy=1
 if defined sy (start %~dp0ShadowsocksR-dotnet4.0.exe) else start %~dp0ShadowsocksR-dotnet2.0.exe
 ::获取tap适配器名称
