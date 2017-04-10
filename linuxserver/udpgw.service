@@ -1,0 +1,17 @@
+[Unit]
+Description=udpgw
+After=network.target
+Wants=network.target
+[Service]
+Group=nogroup
+LimitCORE=infinity
+LimitNOFILE=512000
+LimitNPROC=512000
+Type=simple
+PIDFile=/tmp/udpgw.pid
+ExecStart=/root/badvpn-udpgw --listen-addr [·þÎñÆ÷ipv4]:7300
+KillMode=process
+Restart=always
+
+[Install]
+WantedBy=udpgw.target
