@@ -1,6 +1,7 @@
 Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
-Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo ÇëÊ¹ÓÃÓÒ¼ü¹ÜÀíÔ±Éí·İÔËĞĞ£¡&&Pause >nul&&Exit)
+Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo è¯·ä½¿ç”¨å³é”®ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼&&Pause >nul&&Exit)
 Rd "%WinDir%\System32\test_permissions" 2>NUL
 NETSH INT IP RESET
 netsh winsock reset
-echo ÇëÖØÆô
+echo è¯·é‡å¯
+pause
