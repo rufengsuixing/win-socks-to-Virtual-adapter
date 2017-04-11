@@ -4,7 +4,7 @@
 适用于IPV6服务端，服务端为ipv4需自行修改route<br>
 获取适配器名称和IP的方法是通过搜索10.为开头的ip来确定的<br>
 进程绑定现在是绑定的shadowsocksr<br>
-通过用户自定义服务器地址列表然后脚本读取ssr的配置文件实现多配置切换 for udp need restart<br>
+通过用户自定义服务器地址列表然后脚本读取ssr的配置文件实现多配置切换 for udp need restart application<br>
 启用udp需要在服务器上进行端口监听（tested on debian）</b>
 <h3>安装</h3>
 <p>pc 将windowsclient文件夹里的内容拷到shadowsocksr目录下<br>
@@ -19,3 +19,12 @@
 <p>
 linux 服务端<code>systemctl start udpgw.service</code> 或者 <code>badvpn-udpgw --listen-addr [服务器ipv4]:7300</code><br>
 windows客户端右键管理员运行start.bat</p>
+
+
+<p>更新日志：<br>
+change the way to get gateway<br>
+change the way to set gateway to default<br>
+一个代码错误<br>
+增加无ipv4的时候无脚本延时导致启动失败的问题<br>
+增加轻度修复网络在未连校园网时的修复效果<br>
+</p>
