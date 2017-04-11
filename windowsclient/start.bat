@@ -3,15 +3,18 @@ Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
 Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo 请使用右键管理员身份运行！&&Pause >nul&&Exit)
 Rd "%WinDir%\System32\test_permissions" 2>NUL
 cd "%~dp0"
+set count=1
 :check
 systeminfo>tmpall.txt
 ::检测ipv6
 for /f "tokens=*" %%a in ('findstr /r "200[0-9]:.*:.*:.*:.*:.*" tmpall.txt') do (set ipv6=%%a )
 if defined ipv6 goto ok
-set qu=  
-set /p qu= 貌似你没有ipv6，要尝试用么（y/n）
-if /i "%qu%"=="y" goto ok
-if /i "%qu%"=="n" exit
+echo 貌似你没有ipv6，正在尝试重新获取第%count%次
+start ipconfig /renew6
+choice /t 3 /d y /n >nul
+set /a count=%count% + 1
+if count==5 (echo 无法自动获取ipv6 请检查是不是有ipv6环境 & pause & exit)
+go to check
 :ok
 ::检测tap驱动
 for /f "tokens=1 delims=[] " %%a in ('find /n "TAP" tmpall.txt') do (set wei=%%a)
@@ -59,8 +62,7 @@ netsh interface ip set interface %mainname% ignoredefaultroutes=enabled
 netsh interface ipv4 del dns name=%mainname% all
 netsh interface ipv4 add dns name=%mainname% addr=8.8.8.8 index=1 validate=no
 ::获取gate（没考虑掩码）
-for /f "tokens=2 delims=:" %%a in ('findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set ip=%%a)
-for /f "tokens=1,2 delims=. " %%a in ('echo %ip%') do (set gate=%%a.%%b.0.1)
+for /f  %%a in ('ipconfig ^| findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"') do (set gate=%%a)
 ::延时6秒
 choice /t 6 /d y /n >nul
 ::设置路由
