@@ -13,7 +13,7 @@ echo 貌似你没有ipv6，正在尝试重新获取第%count%次
 start ipconfig /renew6
 choice /t 3 /d y /n >nul
 set /a count=%count% + 1
-if count==5 (echo 无法自动获取ipv6 请检查是不是有ipv6环境 & pause & exit)
+if %count%==5 (echo 无法自动获取ipv6 请检查是不是有ipv6环境 & pause & exit)
 go to check
 :ok
 ::检测tap驱动
@@ -69,6 +69,7 @@ choice /t 6 /d y /n >nul
 route delete 0.0.0.0
 route add 10.0.0.0 mask 255.0.0.0 %gate% 
 :du
+if not defined wei2 choice /t 6 /d y /n >nul
 route add 0.0.0.0 mask 0.0.0.0 192.168.222.2
 echo 不要关新开的窗口哦
 pause
