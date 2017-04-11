@@ -1,5 +1,5 @@
 # win-socks-to-Virtual-adapter
-<h3>帮助你将socks代理转到一张虚拟网卡上，所有经过虚拟网卡的流量会被发送到代理for windows （tested on win10）</h3>
+<h3>帮助你将socks代理转到一张虚拟网卡上，所有经过虚拟网卡的流量会被发送到代理for windows （tested on win10 win7）</h3>
 <p>感谢badvpn，windows tap项目  <br>
 适用于IPV6服务端，服务端为ipv4需自行修改route<br>
 获取适配器名称和IP的方法是通过搜索10.为开头的ip来确定的<br>
