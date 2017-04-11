@@ -14,7 +14,7 @@ start ipconfig /renew6
 choice /t 3 /d y /n >nul
 set /a count=%count% + 1
 if %count%==5 (echo 无法自动获取ipv6 请检查是不是有ipv6环境 & pause & exit)
-go to check
+goto check
 :ok
 ::检测tap驱动
 for /f "tokens=1 delims=[] " %%a in ('find /n "TAP" tmpall.txt') do (set wei=%%a)
