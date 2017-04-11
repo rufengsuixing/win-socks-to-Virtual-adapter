@@ -7,8 +7,6 @@ cd "%~dp0"
 systeminfo>tmpall.txt
 for /f "tokens=2 delims=:" %%a in ('findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set ip=%%a)
 if not defined ip echo 请连接校园网后开始或者使用强力修复 & pause & exit
-::获取gate（没考虑掩码）
-for /f "tokens=1,2 delims=. " %%a in ('echo %ip%') do (set gate=%%a.%%b.0.1)
 ::获取主适配器名称
 for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set wei2=%%a)
 if not defined wei2 goto du
@@ -18,9 +16,9 @@ for /f "skip=%wei2% tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined m
 for /f "tokens=* delims= " %%a in ("%mainnamet%") do call :ie "%%a"
 set mainname="%var%"
 netsh interface ip set interface %mainname% ignoredefaultroutes=disabled
-route add 0.0.0.0 mask 0.0.0.0 %gate%
 netsh interface ip set dns name=%mainname% source=dhcp
 netsh interface ip set address name=%mainname% source=dhcp
+ipconfig /renew
 echo 如果没有修复使用强力修复
 pause
 exit
