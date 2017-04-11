@@ -6,7 +6,7 @@ NETSH WINHTTP RESET PROXY
 cd "%~dp0"
 systeminfo>tmpall.txt
 for /f "tokens=2 delims=:" %%a in ('findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set ip=%%a)
-if not defined ip echo 请连接校园网后开始或者使用强力修复 & pause & exit
+if not defined ip ipconfig /renew & echo 请连接校园网后开始或者使用强力修复 & pause & exit
 ::获取主适配器名称
 for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set wei2=%%a)
 if not defined wei2 goto du
