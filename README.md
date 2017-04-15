@@ -33,4 +33,5 @@ change the way to set gateway to default<br>
 增加dns修复，route修复<br>
 修复内网网站访问（部分）<br>
 修改更改route的方式，增强兼容性<br>
+增强轻度修复网络<br>
 </p>
