@@ -52,7 +52,9 @@ start badvpn-tun2socks --tundev tap0901:%dname%:192.168.222.1:192.168.222.0:255.
 ::获取主适配器名称
 for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set wei2=%%a)
 if not defined wei2 goto du
-set /a wei2=%wei2% - 5
+set /a wei2=%wei2% - 4
+for /f "tokens=1 delims=:" %%a in ('findstr /n /r "\[[0-9][0-9]\]" tmpall.txt') do (if %%a==%wei2% set cut=1)
+if not "1"=="%cut%" set /a wei2=%wei2%-1
 set "mainnamet="
 for /f "skip=%wei2% tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined mainnamet set "mainnamet=%%a")
 for /f "tokens=* delims= " %%a in ("%mainnamet%") do call :ie "%%a"
@@ -61,8 +63,18 @@ set mainname="%var%"
 netsh interface ip set interface %mainname% ignoredefaultroutes=enabled
 netsh interface ipv4 del dns name=%mainname% all
 netsh interface ipv4 add dns name=%mainname% addr=8.8.8.8 index=1 validate=no
+::获取ip(无检测)
+::ipconfig > tmp.txt
+::for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmp.txt') do (set wei3=%%a)
+::for /f "tokens=3 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmp.txt') do (set ip=%%a)
+::ip和mask里有空格
+::set "mask="
+::for /f "skip=%wei3% tokens=2 delims=:" %%a in (tmp.txt) do (if not defined mask set "mask=%%a")
+::netsh interface ipv4 add address name=%mainname% address=%ip% mask=%mask%
 ::获取gate（没考虑掩码）
-for /f  %%a in ('ipconfig ^| findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"') do (set gate=%%a)
+::for /f  %%a in ('ipconfig ^| findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"') do (set gate=%%a)
+::获取gate（route方式）
+for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<0.0.0.0\>"') do (if not %%a==192.168.222.2 set gate=%%a)
 ::延时6秒
 choice /t 6 /d y /n >nul
 ::设置路由
