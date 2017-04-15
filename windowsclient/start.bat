@@ -60,7 +60,7 @@ for /f "skip=%wei2% tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined m
 for /f "tokens=* delims= " %%a in ("%mainnamet%") do call :ie "%%a"
 set mainname="%var%"
 ::修改主适配器dns
-netsh interface ip set interface %mainname% ignoredefaultroutes=enabled
+::netsh interface ip set interface %mainname% ignoredefaultroutes=enabled
 netsh interface ipv4 del dns name=%mainname% all
 netsh interface ipv4 add dns name=%mainname% addr=8.8.8.8 index=1 validate=no
 ::获取ip(无检测)
