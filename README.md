@@ -27,4 +27,10 @@ change the way to set gateway to default<br>
 一个代码错误<br>
 增加无ipv4的时候无脚本延时导致启动失败的问题<br>
 增加轻度修复网络在未连校园网时的修复效果<br>
+如果没有ipv6会无数次重试获取ipv6<br>
+增加备份和恢复网络配置（需要重启）<br>
+降低日志数量，只显示错误<br>
+增加dns修复，route修复<br>
+修复内网网站访问（部分）<br>
+修改更改route的方式，增强兼容性<br>
 </p>
