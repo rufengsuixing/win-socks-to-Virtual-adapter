@@ -1,13 +1,12 @@
-@echo off
 Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
-Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo è¯·ä½¿ç”¨å³é”®ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼&&Pause >nul&&Exit)
+Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo ÇëÊ¹ÓÃÓÒ¼ü¹ÜÀíÔ±Éí·İÔËĞĞ£¡&&Pause >nul&&Exit)
 Rd "%WinDir%\System32\test_permissions" 2>NUL
 NETSH WINHTTP RESET PROXY
 cd "%~dp0"
 ::systeminfo>tmpall.txt
 ::for /f "tokens=2 delims=:" %%a in ('findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set ip=%%a)
-::if not defined ip ipconfig /renew &echo è¯·è¿æ¥æ ¡å›­ç½‘åå¼€å§‹æˆ–è€…ä½¿ç”¨å¼ºåŠ›ä¿®å¤ & pause & exit
-::è·å–ä¸»é€‚é…å™¨åç§°
+::if not defined ip ipconfig /renew &echo ÇëÁ¬½ÓĞ£Ô°Íøºó¿ªÊ¼»òÕßÊ¹ÓÃÇ¿Á¦ĞŞ¸´ & pause & exit
+::»ñÈ¡Ö÷ÊÊÅäÆ÷Ãû³Æ
 ::for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set wei2=%%a)
 ::if not defined wei2 goto du
 ::set /a wei2=%wei2% - 4
@@ -20,22 +19,22 @@ cd "%~dp0"
 ::netsh interface ip set interface %mainname% ignoredefaultroutes=disabled
 ::netsh interface ip set dns name=%mainname% source=dhcp
 ::netsh interface ip set address name=%mainname% source=dhcp
-::è·å–gateï¼ˆrouteæ–¹å¼ï¼‰
+::»ñÈ¡gate£¨route·½Ê½£©
 ::for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<0.0.0.0\>"') do (if not %%a==192.168.222.2 set gate=%%a)
-::è·å–æ‰€æœ‰é€‚é…å™¨ï¼ˆä¸­æ–‡ï¼‰
-::for /f "tokens=2* delims=å™¨:" %%a in ('ipconfig ^| findstr "å™¨.* :$"') do (echo %%a>>shipei.txt)
+::»ñÈ¡ËùÓĞÊÊÅäÆ÷£¨ÖĞÎÄ£©
+::for /f "tokens=2* delims=Æ÷:" %%a in ('ipconfig ^| findstr "Æ÷.* :$"') do (echo %%a>>shipei.txt)
 route delete 10.0.0.0 mask 255.0.0.0
-::è·å–æ‰€æœ‰é€‚é…å™¨(å…¼å®¹)
+::»ñÈ¡ËùÓĞÊÊÅäÆ÷(¼æÈİ)
 for /f "skip=3 tokens=3,* delims= " %%a in ('netsh interface show interface') do (echo "%%b">>shipei.txt)
 ::for /f "skip=3 tokens=3,* delims= " %%a in ('netsh interface show interface') do call :qukong "%%b" )
 for /f "tokens=* delims= " %%a in (shipei.txt)do (netsh interface ip set address name=%%a source=dhcp)
 for /f "tokens=* delims= " %%a in (shipei.txt)do (netsh interface ip set dns name=%%a source=dhcp)
 del shipei.txt
 ipconfig /renew
-echo å¦‚æœæ²¡æœ‰ä¿®å¤ä½¿ç”¨å¼ºåŠ›ä¿®å¤
+echo Èç¹ûÃ»ÓĞĞŞ¸´Ê¹ÓÃÇ¿Á¦ĞŞ¸´
 pause
 exit
-::åˆ é™¤å‰åç©ºæ ¼çš„å‡½æ•°
+::É¾³ıÇ°ºó¿Õ¸ñµÄº¯Êı
 :ie str
 set "var=%~1"
 if "%var:~-1%"==" "  call :ie "%var:~0,-1%"
@@ -44,3 +43,9 @@ goto :eof
 ::set "var=%~1"
 ::set "var=%var:~0,-1%"
 ::echo %var%>>shipei.txt
+
+
+
+
+
+
