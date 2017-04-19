@@ -1,6 +1,10 @@
 # win-socks-to-Virtual-adapter
 <h3>帮助你将socks代理转到一张虚拟网卡上，所有经过虚拟网卡的流量会被发送到代理for windows （tested on win10 win7）</h3>
 <p>感谢badvpn，windows tap项目  <br>
+<h4>原理简介</h4>
+<p>udp需要服务端支持<br>
+将tcp转发至虚拟网卡转发至socks，udp通过tcp方式转发到socks然后在服务端转换为udp发送出去</p>
+<h3>注意事项</h3>
 适用于IPV6服务端，服务端为ipv4需自行修改route<br>
 获取适配器名称和IP的方法是通过搜索10.为开头的ip来确定的<br>
 进程绑定现在是绑定的shadowsocksr<br>
