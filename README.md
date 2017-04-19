@@ -5,7 +5,7 @@
 获取适配器名称和IP的方法是通过搜索10.为开头的ip来确定的<br>
 进程绑定现在是绑定的shadowsocksr<br>
 通过用户自定义服务器地址列表然后脚本读取ssr的配置文件实现多配置切换 for udp need restart application<br>
-启用udp需要在服务器上进行端口监听（tested on debian）</b>
+启用udp需要在服务器上进行端口监听（tested on debian）</p>
 <h3>安装</h3>
 <p>pc 将windowsclient文件夹里的内容拷到shadowsocksr目录下<br>
 修改start.bat 手动写入服务器地址列表(要求是ipv4地址)<br><br>
@@ -18,9 +18,7 @@
 <h3>运行</h3>
 <p>
 linux 服务端<code>systemctl start udpgw.service</code> 或者 <code>badvpn-udpgw --listen-addr [服务器ipv4]:7300</code><br>
-windows客户端右键管理员运行start.bat</p>
-
-
+windows客户端右键管理员运行开始上网.bat</p>
 <p>更新日志：<br>
 change the way to get gateway<br>
 change the way to set gateway to default<br>
@@ -34,4 +32,9 @@ change the way to set gateway to default<br>
 修复内网网站访问（部分）<br>
 修改更改route的方式，增强兼容性<br>
 增强轻度修复网络<br>
+主适配器名称获取错误<br>
+修改获取route的方式<br>
+增加守护脚本和自动修复网络<br>
+修复驱动引导流程<br>
+修改引导用户安装驱动<br>
 </p>
