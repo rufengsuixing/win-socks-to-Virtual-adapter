@@ -1,33 +1,36 @@
 @echo off
-::È¨ÏŞ¼ì²â
+::æƒé™æ£€æµ‹
 Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
-Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo ÇëÊ¹ÓÃÓÒ¼ü¹ÜÀíÔ±Éí·İÔËĞĞ£¡&&Pause >nul&&Exit)
+Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo è¯·ä½¿ç”¨å³é”®ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼&&Pause >nul&&Exit)
 Rd "%WinDir%\System32\test_permissions" 2>NUL
 cd "%~dp0"
-::ÊØ»¤Ìø×ª
+::å®ˆæŠ¤è·³è½¬
 if "%1"=="h" goto begin
 set count=1
 :check
 systeminfo>tmpall.txt
-::¼ì²âipv6
+::è¿çº¿æ£€æµ‹(ä¸­æ–‡å¯å»,åªå‡ºç°ä¸€æ¬¡)
+for /f "tokens=2" %%a in ('netsh interface show interface') do (if %%a==å·²è¿æ¥ set net=1)
+if not %net%==1 echo è¯·æ£€æŸ¥ç½‘ç»œæ˜¯å¦è¿æ¥orä½ æ˜¯è‹±æ–‡ç³»ç»Ÿ&&pause
+::æ£€æµ‹ipv6
 for /f "tokens=*" %%a in ('findstr /r "200[0-9]:.*:.*:.*:.*:.*" tmpall.txt') do (set ipv6=%%a )
 if defined ipv6 goto ok
-echo Ã²ËÆÄãÃ»ÓĞipv6£¬ÕıÔÚ³¢ÊÔÖØĞÂ»ñÈ¡µÚ%count%´Î
+echo è²Œä¼¼ä½ æ²¡æœ‰ipv6ï¼Œæ­£åœ¨å°è¯•é‡æ–°è·å–ç¬¬%count%æ¬¡
 start ipconfig /renew6
 choice /t 3 /d y /n >nul
 set /a count=%count% + 1
-if %count%==5 (echo ÎŞ·¨×Ô¶¯»ñÈ¡ipv6 Çë¼ì²éÊÇ²»ÊÇÓĞipv6»·¾³ & pause & exit)
+if %count%==5 (echo æ— æ³•è‡ªåŠ¨è·å–ipv6 è¯·æ£€æŸ¥æ˜¯ä¸æ˜¯æœ‰ipv6ç¯å¢ƒ & pause & exit)
 goto check
 :ok
-::¼ì²âtapÇı¶¯
+::æ£€æµ‹tapé©±åŠ¨
 for /f "tokens=1 delims=[] " %%a in ('find /n "TAP" tmpall.txt') do (set wei=%%a)
 if %wei%==---------- call :checkd&&goto check
-::¼ì²â½ø³Ì
+::æ£€æµ‹è¿›ç¨‹
 tasklist|find /i "ShadowsocksR"
 if %errorlevel% == 0 (taskkill /F /im ShadowsocksR*)
-::¶ÁÈ¡ssrÅäÖÃÎÄ¼ş
+::è¯»å–ssré…ç½®æ–‡ä»¶
 for /f "tokens=1,2,3 delims=, " %%a in ('find /i "index" gui-config.json') do (set ser=%%c)
-::¸ù¾İÅäÖÃÎÄ¼ş¶ÔÓ¦ĞòºÅÊÖ¶¯ÉèÖÃipv4µØÖ·
+::æ ¹æ®é…ç½®æ–‡ä»¶å¯¹åº”åºå·æ‰‹åŠ¨è®¾ç½®ipv4åœ°å€
 ::if "%ser%"=="0" (set server=*.*.*.*:7300)
 ::if "%ser%"=="1" (set server=*.*.*.*:7300)
 ::-----------------------------------------------
@@ -36,21 +39,21 @@ if %errorlevel% == 0 set sy=1
 findstr /c:"Windows 8" tmpall.txt
 if %errorlevel% == 0 set sy=1
 if defined sy (start ShadowsocksR-dotnet4.0.exe) else start ShadowsocksR-dotnet2.0.exe
-::»ñÈ¡tapÊÊÅäÆ÷Ãû³Æ
+::è·å–tapé€‚é…å™¨åç§°
 set "dnamet="
 for /f "skip=%wei%  tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined dnamet set "dnamet=%%a")
 for /f "tokens=* delims= " %%a in ("%dnamet%") do call :ie "%%a"
 set dname="%var%"
-::ÔÊĞí×ª·¢£¨ĞŞ¸´ÄÚÍø£©
+::å…è®¸è½¬å‘ï¼ˆä¿®å¤å†…ç½‘ï¼‰
 netsh interface ipv4 set interface %dname% enable
-::ĞŞ¸Ätap ip
+::ä¿®æ”¹tap ip
 netsh interface ipv4 add dns name=%dname% addr=8.8.8.8 index=1 validate=no
 netsh interface ip set address name=%dname% source=static addr=192.168.222.1 mask=255.255.255.0
 choice /t 1 /d y /n >nul
-::Æô¶¯tun2socks½ø³Ì
+::å¯åŠ¨tun2socksè¿›ç¨‹
 start badvpn-tun2socks --tundev tap0901:%dname%:192.168.222.1:192.168.222.0:255.255.255.0 --netif-ipaddr 192.168.222.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --udpgw-remote-server-addr %server%
 ::--loglevel 1
-::»ñÈ¡Ö÷ÊÊÅäÆ÷Ãû³Æ
+::è·å–ä¸»é€‚é…å™¨åç§°
 for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set wei2=%%a)
 if not defined wei2 goto du
 set /a wei2=%wei2% - 4
@@ -61,40 +64,40 @@ for /f "skip=%wei2% tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined m
 for /f "tokens=* delims= " %%a in ("%mainnamet%") do call :ie "%%a"
 set mainname="%var%"
 echo %mainname%>>testlog.txt
-::ĞŞ¸ÄÖ÷ÊÊÅäÆ÷dns
+::ä¿®æ”¹ä¸»é€‚é…å™¨dns
 ::netsh interface ip set interface %mainname% ignoredefaultroutes=enabled
 netsh interface ipv4 del dns name=%mainname% all
 netsh interface ipv4 add dns name=%mainname% addr=8.8.8.8 index=1 validate=no
-::»ñÈ¡ip(ÎŞ¼ì²â)
+::è·å–ip(æ— æ£€æµ‹)
 ::ipconfig > tmp.txt
 ::for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmp.txt') do (set wei3=%%a)
 ::for /f "tokens=3 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmp.txt') do (set ip=%%a)
-::ipºÍmaskÀïÓĞ¿Õ¸ñ
+::ipå’Œmaské‡Œæœ‰ç©ºæ ¼
 ::set "mask="
 ::for /f "skip=%wei3% tokens=2 delims=:" %%a in (tmp.txt) do (if not defined mask set "mask=%%a")
 ::netsh interface ipv4 add address name=%mainname% address=%ip% mask=%mask%
 ::
-::»ñÈ¡gate£¨Ã»¿¼ÂÇÑÚÂë£©
+::è·å–gateï¼ˆæ²¡è€ƒè™‘æ©ç ï¼‰
 ::for /f  %%a in ('ipconfig ^| findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"') do (set gate=%%a)
-::»ñÈ¡gate£¨route·½Ê½£©
+::è·å–gateï¼ˆrouteæ–¹å¼ï¼‰
 :getgate
 for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<0.0.0.0\>"') do (if not %%a==192.168.222.2 set gate=%%a)
 if not defined gate (
 for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<10.0.0.0\>"') do (set gate=%%a)
 )
-::ÑÓÊ±6Ãë
+::å»¶æ—¶6ç§’
 choice /t 5 /d y /n >nul
-::ÉèÖÃÂ·ÓÉ
+::è®¾ç½®è·¯ç”±
 route delete 0.0.0.0
 route add 10.0.0.0 mask 255.0.0.0 %gate% 
 :du
 if not defined wei2 choice /t 6 /d y /n >nul
 route add 0.0.0.0 mask 0.0.0.0 192.168.222.2
 if not defined gate exit
-::ÊØ»¤½ø³Ì£¨Òş²Ø´°¿Ú£©
+::å®ˆæŠ¤è¿›ç¨‹ï¼ˆéšè—çª—å£ï¼‰
 start mshta vbscript:createobject("wscript.shell").run("""%~nx0"" h",0)(window.close)&&exit
 :begin
-::»ñÈ¡Ö÷ÊÊÅäÆ÷Ãû³Æ
+::è·å–ä¸»é€‚é…å™¨åç§°
 for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set wei2=%%a)
 set /a wei2=%wei2% - 4
 for /f "tokens=1 delims=:" %%a in ('findstr /n /r "\[[0-9][0-9]\]" tmpall.txt') do (if %%a==%wei2% set cut=1)
@@ -105,8 +108,8 @@ for /f "tokens=* delims= " %%a in ("%mainnamet%") do call :ie "%%a"
 set mainname="%var%"
 :begin2
 ::set gate=%2
-::ÒÔÏÂÎªÕı³£Åú´¦ÀíÃüÁî£¬²»¿Éº¬ÓĞpause set/pµÈ½»»¥ÃüÁî
-::¼ì²â½ø³Ì
+::ä»¥ä¸‹ä¸ºæ­£å¸¸æ‰¹å¤„ç†å‘½ä»¤ï¼Œä¸å¯å«æœ‰pause set/pç­‰äº¤äº’å‘½ä»¤
+::æ£€æµ‹è¿›ç¨‹
 choice /t 10 /d y /n >nul
 tasklist|find /i "badvpn-tun2socks.exe"
 if not %errorlevel% == 0 (
@@ -126,14 +129,14 @@ route add 0.0.0.0 mask 0.0.0.0 %gate%
 route delete 10.0.0.0 mask 255.0.0.0 %gate%
 netsh interface ip set dns name=%mainname% source=dhcp
 goto :EOF
-::É¾³ıÇ°ºó¿Õ¸ñµÄº¯Êı
+::åˆ é™¤å‰åç©ºæ ¼çš„å‡½æ•°
 :ie str 
 set "var=%~1"
 if "%var:~-1%"==" "  call :ie "%var:~0,-1%"
 goto :EOF
 :checkd
 set qu=  
-set /p qu= Ã²ËÆÄãÃ»ÓĞ°²×°Çı¶¯£¬Òª°²×°Ã´,¶à´ÎÖØ¸´ÇëÊÖ¶¯°²×°tap-windows£¨y/n£©
+set /p qu= è²Œä¼¼ä½ æ²¡æœ‰å®‰è£…é©±åŠ¨ï¼Œè¦å®‰è£…ä¹ˆ,å¤šæ¬¡é‡å¤è¯·æ‰‹åŠ¨å®‰è£…tap-windowsï¼ˆy/nï¼‰
 if /i "%qu%"=="y" start /w "" tap-windows-9.9.2_3.exe 
-if not %errorlevel% == 0 (echo ÇëÊÖ¶¯°²×°tap-windows-9.9.2_3.exeºó¼ÌĞø & pause)
+if not %errorlevel% == 0 (echo è¯·æ‰‹åŠ¨å®‰è£…tap-windows-9.9.2_3.exeåç»§ç»­ & pause)
 if /i "%qu%"=="n" exit
