@@ -1,142 +1,152 @@
 @echo off
-::æƒé™æ£€æµ‹
+::È¨ÏŞ¼ì²â
 Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
-Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo è¯·ä½¿ç”¨å³é”®ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼&&Pause >nul&&Exit)
+Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo ÇëÊ¹ÓÃÓÒ¼ü¹ÜÀíÔ±Éí·İÔËĞĞ£¡&&Pause >nul&&Exit)
 Rd "%WinDir%\System32\test_permissions" 2>NUL
 cd "%~dp0"
-::å®ˆæŠ¤è·³è½¬
+if exist tmp.pid echo "ÉÏ´ÎÃ»ÓĞÕı³£¹Ø±Õ£¨¹Ø»úµÈ·½Ê½£©£¬³öÏÖÎÊÌâÇëÊ¹ÓÃÇá¶ÈĞŞ¸´"
+::ÊØ»¤Ìø×ª
 if "%1"=="h" goto begin
 set count=1
 :check
 systeminfo>tmpall.txt
-::è¿çº¿æ£€æµ‹(ä¸­æ–‡å¯å»,åªå‡ºç°ä¸€æ¬¡)
-for /f "tokens=2" %%a in ('netsh interface show interface') do (if %%a==å·²è¿æ¥ set net=1)
-if not %net%==1 echo è¯·æ£€æŸ¥ç½‘ç»œæ˜¯å¦è¿æ¥orä½ æ˜¯è‹±æ–‡ç³»ç»Ÿ&&pause
-::æ£€æµ‹ipv6
+::Á¬Ïß¼ì²â(ÖĞÎÄ¿ÉÈ¥£¬Ö»³öÏÖÒ»´Î)
+for /f "tokens=2" %%a in ('netsh interface show interface') do (if %%a==ÒÑÁ¬½Ó set net=1)
+if not ¡°%net%¡±==¡°1¡± (
+echo ¡°Çë¼ì²éÍøÂçÊÇ·ñÁ¬½Ó»òÄãÊÇÓ¢ÎÄÏµÍ³¡±
+pause
+)
+::¼ì²âipv6
 for /f "tokens=*" %%a in ('findstr /r "200[0-9]:.*:.*:.*:.*:.*" tmpall.txt') do (set ipv6=%%a )
 if defined ipv6 goto ok
-echo è²Œä¼¼ä½ æ²¡æœ‰ipv6ï¼Œæ­£åœ¨å°è¯•é‡æ–°è·å–ç¬¬%count%æ¬¡
+echo Ã²ËÆÄãÃ»ÓĞipv6£¬ÕıÔÚ³¢ÊÔÖØĞÂ»ñÈ¡µÚ%count%´Î
 start ipconfig /renew6
 choice /t 3 /d y /n >nul
 set /a count=%count% + 1
-if %count%==5 (echo æ— æ³•è‡ªåŠ¨è·å–ipv6 è¯·æ£€æŸ¥æ˜¯ä¸æ˜¯æœ‰ipv6ç¯å¢ƒ & pause & exit)
+if %count%==5 (echo ÎŞ·¨×Ô¶¯»ñÈ¡ipv6 Çë¼ì²éÊÇ²»ÊÇÓĞipv6»·¾³ & pause & exit)
 goto check
 :ok
-::æ£€æµ‹tapé©±åŠ¨
-for /f "tokens=1 delims=[] " %%a in ('find /n "TAP" tmpall.txt') do (set wei=%%a)
+::¼ì²âtapÇı¶¯
+for /f "tokens=1 delims=[] " %%a in ('find /n "TAP-Windows" tmpall.txt') do (set wei=%%a)
 if %wei%==---------- call :checkd&&goto check
-::æ£€æµ‹è¿›ç¨‹
-tasklist|find /i "ShadowsocksR"
-if %errorlevel% == 0 (taskkill /F /im ShadowsocksR*)
-::è¯»å–ssré…ç½®æ–‡ä»¶
+::¼ì²â½ø³Ì
 for /f "tokens=1,2,3 delims=, " %%a in ('find /i "index" gui-config.json') do (set ser=%%c)
-::æ ¹æ®é…ç½®æ–‡ä»¶å¯¹åº”åºå·æ‰‹åŠ¨è®¾ç½®ipv4åœ°å€
+::¸ù¾İÅäÖÃÎÄ¼ş¶ÔÓ¦ĞòºÅÊÖ¶¯ÉèÖÃipv4µØÖ·
 ::if "%ser%"=="0" (set server=*.*.*.*:7300)
 ::if "%ser%"=="1" (set server=*.*.*.*:7300)
 ::-----------------------------------------------
+tasklist|find /i "ShadowsocksR"
+if %errorlevel% == 0 (goto ssr)
+
 findstr /c:"Windows 10" tmpall.txt
 if %errorlevel% == 0 set sy=1
 findstr /c:"Windows 8" tmpall.txt
 if %errorlevel% == 0 set sy=1
 if defined sy (start ShadowsocksR-dotnet4.0.exe) else start ShadowsocksR-dotnet2.0.exe
-::è·å–tapé€‚é…å™¨åç§°
+:ssr
+::»ñÈ¡tapÊÊÅäÆ÷Ãû³Æ
 set "dnamet="
 for /f "skip=%wei%  tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined dnamet set "dnamet=%%a")
 for /f "tokens=* delims= " %%a in ("%dnamet%") do call :ie "%%a"
 set dname="%var%"
-::å…è®¸è½¬å‘ï¼ˆä¿®å¤å†…ç½‘ï¼‰
+::ÔÊĞí×ª·¢£¨ĞŞ¸´ÄÚÍø£©
 netsh interface ipv4 set interface %dname% enable
-::ä¿®æ”¹tap ip
+::ĞŞ¸Ätap ip
 netsh interface ipv4 add dns name=%dname% addr=8.8.8.8 index=1 validate=no
 netsh interface ip set address name=%dname% source=static addr=192.168.222.1 mask=255.255.255.0
 choice /t 1 /d y /n >nul
-::å¯åŠ¨tun2socksè¿›ç¨‹
+::Æô¶¯tun2socks½ø³Ì
 start badvpn-tun2socks --tundev tap0901:%dname%:192.168.222.1:192.168.222.0:255.255.255.0 --netif-ipaddr 192.168.222.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --udpgw-remote-server-addr %server%
 ::--loglevel 1
-::è·å–ä¸»é€‚é…å™¨åç§°
-for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set wei2=%%a)
+::»ñÈ¡Ö÷ÊÊÅäÆ÷Ãû³ÆºÍÍø¿¨Ãû³ÆµÚÒ»¸öµ¥´Ê£¨ipv6£©
+for /f "tokens=1,2 delims=:[] " %%a in ('findstr /n /r "200[0-9]:.*:.*:.*:.*:.*" tmpall.txt') do (set wei2=%%a&set minus=%%b)
 if not defined wei2 goto du
-set /a wei2=%wei2% - 4
+set /a wei2=%wei2%-%minus%-3
 for /f "tokens=1 delims=:" %%a in ('findstr /n /r "\[[0-9][0-9]\]" tmpall.txt') do (if %%a==%wei2% set cut=1)
 if not "1"=="%cut%" set /a wei2=%wei2%-1
 set "mainnamet="
 for /f "skip=%wei2% tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined mainnamet set "mainnamet=%%a")
 for /f "tokens=* delims= " %%a in ("%mainnamet%") do call :ie "%%a"
 set mainname="%var%"
-echo %mainname%>>testlog.txt
-::ä¿®æ”¹ä¸»é€‚é…å™¨dns
+set /a wei2=%wei2%-1
+set "mainnamef="
+for /f "skip=%wei2% tokens=2 delims=: " %%a in (tmpall.txt) do (if not defined mainnamef set "mainnamef=%%a")
+::ĞŞ¸ÄÖ÷ÊÊÅäÆ÷dns
 ::netsh interface ip set interface %mainname% ignoredefaultroutes=enabled
 netsh interface ipv4 del dns name=%mainname% all
 netsh interface ipv4 add dns name=%mainname% addr=8.8.8.8 index=1 validate=no
-::è·å–ip(æ— æ£€æµ‹)
-::ipconfig > tmp.txt
-::for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmp.txt') do (set wei3=%%a)
-::for /f "tokens=3 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmp.txt') do (set ip=%%a)
-::ipå’Œmaské‡Œæœ‰ç©ºæ ¼
-::set "mask="
-::for /f "skip=%wei3% tokens=2 delims=:" %%a in (tmp.txt) do (if not defined mask set "mask=%%a")
-::netsh interface ipv4 add address name=%mainname% address=%ip% mask=%mask%
-::
-::è·å–gateï¼ˆæ²¡è€ƒè™‘æ©ç ï¼‰
-::for /f  %%a in ('ipconfig ^| findstr /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"') do (set gate=%%a)
-::è·å–gateï¼ˆrouteæ–¹å¼ï¼‰
+::ÒâÍâ¹Ø±Õ
+echo %mainname%>tmp.pid
 :getgate
 for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<0.0.0.0\>"') do (if not %%a==192.168.222.2 set gate=%%a)
-if not defined gate (
-for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<10.0.0.0\>"') do (set gate=%%a)
-)
-::å»¶æ—¶6ç§’
-choice /t 5 /d y /n >nul
-::è®¾ç½®è·¯ç”±
+if not defined gate (call :a1)
+for /f "tokens=1 delims=." %%a in ('route print ^| findstr "TAP-Windows"') do (set ift=%%a)
+for /f "tokens=1 delims=." %%a in ('route print ^| findstr "%mainnamef%"') do (set iff=%%a)
+::make sure
+if "%ift%"=="" echo Ê§°Ü & goto getgate
+if "%iff%"=="" echo Ê§°Ü & goto getgate
+::echo %ift%>chuanift.txt
+::echo %iff%>chuaniff.txt
+::ÑÓÊ±6Ãë
+choice /t 6 /d y /n >nul
+::ÉèÖÃÂ·ÓÉ
 route delete 0.0.0.0
-route add 10.0.0.0 mask 255.0.0.0 %gate% 
+route add 10.0.0.0 mask 255.0.0.0 %gate% if %iff%
 :du
 if not defined wei2 choice /t 6 /d y /n >nul
-route add 0.0.0.0 mask 0.0.0.0 192.168.222.2
-if not defined gate exit
-::å®ˆæŠ¤è¿›ç¨‹ï¼ˆéšè—çª—å£ï¼‰
+route add 0.0.0.0 mask 0.0.0.0 192.168.222.2 if %ift%
+
+
+for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<192.168.222.2\>"') do (if "%%a"=="" route add 0.0.0.0 mask 0.0.0.0 192.168.222.2 if %ift%)
+::if not defined gate exit
+::ÊØ»¤½ø³Ì£¨Òş²Ø´°¿Ú,²»Ï²¿ÉÒÔ×¢ÊÍµôÏÂÃæÒ»ĞĞ£©
 start mshta vbscript:createobject("wscript.shell").run("""%~nx0"" h",0)(window.close)&&exit
 :begin
-::è·å–ä¸»é€‚é…å™¨åç§°
-for /f "tokens=1 delims=:" %%a in ('findstr /n /r "10\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" tmpall.txt') do (set wei2=%%a)
-set /a wei2=%wei2% - 4
-for /f "tokens=1 delims=:" %%a in ('findstr /n /r "\[[0-9][0-9]\]" tmpall.txt') do (if %%a==%wei2% set cut=1)
-if not "1"=="%cut%" set /a wei2=%wei2%-1
-set "mainnamet="
-for /f "skip=%wei2% tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined mainnamet set "mainnamet=%%a")
-for /f "tokens=* delims= " %%a in ("%mainnamet%") do call :ie "%%a"
-set mainname="%var%"
 :begin2
-::set gate=%2
-::ä»¥ä¸‹ä¸ºæ­£å¸¸æ‰¹å¤„ç†å‘½ä»¤ï¼Œä¸å¯å«æœ‰pause set/pç­‰äº¤äº’å‘½ä»¤
-::æ£€æµ‹è¿›ç¨‹
+::ÒÔÏÂÎªÕı³£Åú´¦ÀíÃüÁî£¬²»¿Éº¬ÓĞpause set/pµÈ½»»¥ÃüÁî
+::¼ì²â½ø³Ì
 choice /t 10 /d y /n >nul
 tasklist|find /i "badvpn-tun2socks.exe"
 if not %errorlevel% == 0 (
 call :fix
+del tmp.pid
 exit
 )
 set "gate="
 for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<0.0.0.0\>"') do (if not %%a==192.168.222.2 set gate=%%a)
-if defined gate (
-route delete 0.0.0.0 mask 0.0.0.0 %gate%
-route add 10.0.0.0 mask 255.0.0.0 %gate%
-)
+if defined gate (call :resetgate)
+for /f "tokens=2 delims=(%%" %%a in ('ping -6 ipv6.baidu.com') do (if %%a==100 ipconfig /renew6)
 goto begin2
+
 :fix
 for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<10.0.0.0\>"') do (set gate=%%a)
-route add 0.0.0.0 mask 0.0.0.0 %gate%
+route add 0.0.0.0 mask 0.0.0.0 %gate% if %iff%
 route delete 10.0.0.0 mask 255.0.0.0 %gate%
 netsh interface ip set dns name=%mainname% source=dhcp
+netsh interface ip set address name=%mainname% source=dhcp
+ipconfig /renew
 goto :EOF
-::åˆ é™¤å‰åç©ºæ ¼çš„å‡½æ•°
+::É¾³ıÇ°ºó¿Õ¸ñµÄº¯Êı
+
 :ie str 
 set "var=%~1"
 if "%var:~-1%"==" "  call :ie "%var:~0,-1%"
 goto :EOF
+
 :checkd
 set qu=  
-set /p qu= è²Œä¼¼ä½ æ²¡æœ‰å®‰è£…é©±åŠ¨ï¼Œè¦å®‰è£…ä¹ˆ,å¤šæ¬¡é‡å¤è¯·æ‰‹åŠ¨å®‰è£…tap-windowsï¼ˆy/nï¼‰
+set /p qu= Ã²ËÆÄãÃ»ÓĞ°²×°Çı¶¯£¬Òª°²×°Ã´,¶à´ÎÖØ¸´ÇëÊÖ¶¯°²×°tap-windows£¨y/n£©
 if /i "%qu%"=="y" start /w "" tap-windows-9.9.2_3.exe 
-if not %errorlevel% == 0 (echo è¯·æ‰‹åŠ¨å®‰è£…tap-windows-9.9.2_3.exeåç»§ç»­ & pause)
+if not %errorlevel% == 0 (echo ÇëÊÖ¶¯°²×°tap-windows-9.9.2_3.exeºó¼ÌĞø & pause)
 if /i "%qu%"=="n" exit
+goto :EOF
+
+:a1
+for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<10.0.0.0\>"') do (set gate=%%a)
+goto :EOF
+
+:resetgate
+route delete 0.0.0.0 mask 0.0.0.0 %gate%
+route delete 10.0.0.0 mask 255.0.0.0
+route add 10.0.0.0 mask 255.0.0.0 %gate% if %iff%
+goto :EOF
