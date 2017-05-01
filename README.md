@@ -14,7 +14,7 @@
 <p>pc 将windowsclient文件夹里的内容拷到shadowsocksr目录下<br>
 修改开始上网.bat 手动写入服务器地址列表(要求是ipv4地址)<br>
 在linux服务器端，通过winscp将linuxserver/badvpn-udpgw文件拷入  编译自https://github.com/ambrop72/badvpn<br>
-<h4>服务端如果要实现后台监听</h4>
+<h4>服务端如果要用udp并实现后台监听</h4>
 修改 udpgw.service 里面的badvpn-udpgw 位置和服务器ipv4地址<br>
 将 udpgw.service 复制到/etc/systemd/system/下<br>
 <code>systemctl daemon-reload</code><br>
@@ -22,6 +22,10 @@
 <h3>运行</h3>
 <p>linux 服务端<code>systemctl start udpgw.service</code> 或者 <code>badvpn-udpgw --listen-addr [服务器ipv4]:7300</code><br>
 windows客户端右键管理员运行 开始上网.bat</p>
+<h3>more</h3>
+<p>因为防止dns污染，服务端解析dns，所以内网网站需要用hosts来访问，提供了一个host生成脚本</p>
+<h4>用法</h4>
+复制导航页的源文件代码到source.txt（导航部分就行）,修改findhost.bat里的dns服务器为内网dns服务器(可能还有内网ip范围默认10.)，运行脚本，生成result.txt，人工大概检查一下，运行修改host使用内网网站.bat,想恢复时点击还原hosts即可。
 <p>更新日志：<br>
 change the way to get gateway<br>
 change the way to set gateway to default<br>
@@ -47,5 +51,10 @@ route 接口错误<br>
 有ipv6地址无法上网时自动重获ipv6<br>
 无ipv4也增加守护脚本<br>
 修改主适配器名称获取方式为ipv6<br>
-不再强制关闭已有进程
+不再强制关闭已有进程<br>
+自检测防止重复运行<br>
+延时调整，细节调整<br>
+启动时刷新dns缓存<br>
+新增修改hosts使用校内网站<br>
+小bug fix
 </p>
