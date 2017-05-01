@@ -1,6 +1,7 @@
 
 set dnsserver=10.0.0.11
 cd "%~dp0"
+if not exist source.txt (echo 请先复制内网导航页源文件码到source.txt & pause & exit)
 for /f tokens^=3^ delims^=^/^" %%a in ('findstr "http://" source.txt') do (call :x1 %%a)
 
 :x1
