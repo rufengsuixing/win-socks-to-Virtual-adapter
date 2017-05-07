@@ -12,7 +12,7 @@
 启用udp需要在服务器上进行端口监听（tested on debian）</p>
 <h3>安装</h3>
 <p>pc 将windowsclient文件夹里的内容拷到shadowsocksr目录下<br>
-修改开始上网.bat 手动写入服务器地址列表(要求是ipv4地址)<br>
+修改开始上网1.0.bat 手动写入服务器地址列表(要求是ipv4地址)<br>
 在linux服务器端，通过winscp将linuxserver/badvpn-udpgw文件拷入  编译自https://github.com/ambrop72/badvpn<br>
 <h4>服务端如果要用udp并实现后台监听</h4>
 修改 udpgw.service 里面的badvpn-udpgw 位置和服务器ipv4地址<br>
@@ -21,7 +21,7 @@
 开机自启则 <code>systemctl enable udpgw.service</code></p>
 <h3>运行</h3>
 <p>linux 服务端<code>systemctl start udpgw.service</code> 或者 <code>badvpn-udpgw --listen-addr [服务器ipv4]:7300</code><br>
-windows客户端右键管理员运行 开始上网.bat</p>
+windows客户端右键管理员运行 开始上网1.0.bat</p>
 <h3>more</h3>
 <p>因为防止dns污染，服务端解析dns，所以内网网站需要用hosts来访问，提供了一个host生成脚本</p>
 <h4>用法</h4>
