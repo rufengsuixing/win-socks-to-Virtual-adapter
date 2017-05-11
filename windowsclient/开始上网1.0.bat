@@ -1,9 +1,9 @@
-@echo off
+﻿@echo off
 ::权限检测
 Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
 Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo 请使用右键管理员身份运行！&&Pause >nul&&Exit)
 Rd "%WinDir%\System32\test_permissions" 2>NUL
-cd "%~dp0"
+cd /d "%~dp0"
 if exist tmp.pid echo "上次没有正常关闭（关机等方式），出现问题请使用轻度修复"
 ::守护跳转
 if "%1"=="h" goto begin
@@ -108,7 +108,7 @@ start mshta vbscript:createobject("wscript.shell").run("""%~nx0"" h",0)(window.c
 :begin2
 ::以下为正常批处理命令，不可含有pause set/p等交互命令
 ::检测进程
-choice /t 5 /d y /n >nul
+choice /t 10 /d y /n >nul
 tasklist|find /i "badvpn-tun2socks.exe"
 if not %errorlevel% == 0 (
 call :fix
@@ -118,8 +118,8 @@ exit
 set "gate="
 for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<0.0.0.0\>"') do (if not %%a==192.168.222.2 set gate=%%a)
 if defined gate (call :resetgate)
-for /f "tokens=2 delims=(%%" %%a in ('ping -6 ipv6.baidu.com') do (if %%a==100 ipconfig /renew6)
-choice /t 5 /d y /n >nul
+for /f "tokens=2 delims=(%%" %%a in ('ping -6 ipv6.baidu.com') do (if "%%a"=="100" ipconfig /renew6)
+choice /t 10 /d y /n >nul
 goto begin2
 
 :fix
