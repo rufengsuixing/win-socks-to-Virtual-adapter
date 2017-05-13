@@ -9,7 +9,7 @@ LimitNOFILE=512000
 LimitNPROC=512000
 Type=simple
 PIDFile=/tmp/udpgw.pid
-ExecStart=/root/badvpn-udpgw --listen-addr [·þÎñÆ÷ipv4]:7300
+ExecStart=/root/badvpn-udpgw --listen-addr 192.168.221.100:7300 --max-clients 100 --max-connections-for-client 500
 KillMode=process
 Restart=always
 

@@ -31,11 +31,6 @@ goto check
 for /f "tokens=1 delims=[] " %%a in ('find /n "TAP-Windows" tmpall.txt') do (set wei=%%a)
 if %wei%==---------- call :checkd&&goto check
 ::检测进程
-for /f "tokens=1,2,3 delims=, " %%a in ('find /i "index" gui-config.json') do (set ser=%%c)
-::根据配置文件对应序号手动设置ipv4地址
-::if "%ser%"=="0" (set server=*.*.*.*:7300)
-::if "%ser%"=="1" (set server=*.*.*.*:7300)
-::-----------------------------------------------
 tasklist|find /i "badvpn-tun2socks"
 if %errorlevel% == 0 (echo 程序已经在运行中&pause&exit)
 tasklist|find /i "ShadowsocksR"
@@ -58,8 +53,7 @@ netsh interface ipv4 add dns name=%dname% addr=8.8.8.8 index=1 validate=no
 netsh interface ip set address name=%dname% source=static addr=192.168.222.1 mask=255.255.255.0
 choice /t 1 /d y /n >nul
 ::启动tun2socks进程
-start badvpn-tun2socks --tundev tap0901:%dname%:192.168.222.1:192.168.222.0:255.255.255.0 --netif-ipaddr 192.168.222.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --udpgw-remote-server-addr %server%
-::--loglevel 1
+start badvpn-tun2socks --tundev tap0901:%dname%:192.168.222.1:192.168.222.0:255.255.255.0 --netif-ipaddr 192.168.222.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --udpgw-remote-server-addr 192.168.221.100:7300  --loglevel 3
 ::获取主适配器名称和网卡名称第一个单词（ipv6）
 for /f "tokens=1,2 delims=:[] " %%a in ('findstr /n /r "200[0-9]:.*:.*:.*:.*:.*" tmpall.txt') do (set wei2=%%a&set minus=%%b)
 if not defined wei2 goto du
