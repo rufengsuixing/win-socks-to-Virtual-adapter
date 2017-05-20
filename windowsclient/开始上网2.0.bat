@@ -28,7 +28,7 @@ systeminfo>tmpall.txt
 for /f "tokens=*" %%a in ('findstr /r "200[0-9]:.*:.*:.*:.*:.*" tmpall.txt') do (set ipv6=%%a )
 if defined ipv6 goto ok
 echo 貌似你没有ipv6，正在尝试重新获取第%count%次
-start ipconfig /renew6
+start /min "" ipconfig /renew6
 choice /t 3 /d y /n >nul
 set /a count=%count% + 1
 if %count%==5 (echo 无法自动获取ipv6 请检查是不是有ipv6环境 & pause & exit)
@@ -40,7 +40,7 @@ if %wei%==---------- call :checkd && goto check
 ::检测进程
 call :findprocess
 if "%tun%"=="1" echo "程序已经在运行" & pause & exit
-if exist tmp.pid echo "上次没有正常关闭（关机等方式），出现问题请使用轻度修复"
+if exist tmpall.txt echo "上次没有正常关闭（关机等方式），出现问题请使用轻度修复"
 ::获取tap适配器名称
 set "dnamet="
 for /f "skip=%wei%  tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined dnamet set "dnamet=%%a")
@@ -49,7 +49,7 @@ set dname="%var%"
 ::允许转发（修复内网）
 netsh interface ipv4 set interface %dname% enable
 ::启动gotun2socks进程
-start gotun2socks -enable-dns-cache -tun-address 192.168.222.1 -tun-gw 192.168.222.2 -tun-mask 255.255.255.0
+start /min "" gotun2socks -enable-dns-cache -tun-address 192.168.222.1 -tun-gw 192.168.222.2 -tun-mask 255.255.255.0
 ::修改tap ip
 netsh interface ipv4 add dns name=%dname% addr=8.8.8.8 index=1 validate=no
 netsh interface ip set address name=%dname% source=static addr=192.168.222.1 mask=255.255.255.0
@@ -74,8 +74,6 @@ del tmpall.txt
 netsh interface ipv4 del dns name=%mainname% all
 netsh interface ipv4 add dns name=%mainname% addr=8.8.8.8 index=1 validate=no
 ipconfig /flushdns
-::意外关闭
-echo %mainname%>tmp.pid
 :getgate
 for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<0.0.0.0\>"') do (if not %%a==192.168.222.2 set gate=%%a)
 if not defined gate (call :a1)
@@ -94,7 +92,7 @@ if not defined wei2 choice /t 6 /d y /n >nul
 route add 0.0.0.0 mask 0.0.0.0 192.168.222.2 if %ift%
 for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<192.168.222.2\>"') do (if "%%a"=="" route add 0.0.0.0 mask 0.0.0.0 192.168.222.2 if %ift%)
 ::if not defined gate exit
-if "%protect%"=="0" del tmp.pid & exit
+if "%protect%"=="0" del tmpall.txt & exit
 ::守护进程
 if "%pro_hide%"=="1" start mshta vbscript:createobject("wscript.shell").run("""%~nx0"" h",0)(window.close)&&exit
 :begin
@@ -113,8 +111,8 @@ route add 0.0.0.0 mask 0.0.0.0 %gate% if %iff%
 route delete 10.0.0.0 mask 255.0.0.0 %gate%
 netsh interface ip set dns name=%mainname% source=dhcp
 netsh interface ip set address name=%mainname% source=dhcp
-del tmp.pid
-start ipconfig /renew
+del tmpall.txt
+start /min "" ipconfig /renew
 goto :EOF
 ::删除前后空格的函数
 :ie str 
