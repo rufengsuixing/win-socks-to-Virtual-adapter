@@ -13,7 +13,7 @@ if "%1"=="h" goto begin
 if exist "%temp%\getadmin.vbs" ( del "%temp%\getadmin.vbs" )  
 pushd "%CD%"  
 cd /d "%~dp0"
-
+if exist tmpall.txt echo "上次没有正常关闭（关机等方式），出现问题请使用轻度修复"
 set count=1
 :check
 systeminfo>tmpall.txt
@@ -40,7 +40,6 @@ if %wei%==---------- call :checkd && goto check
 ::检测进程
 call :findprocess
 if "%tun%"=="1" echo "程序已经在运行" & pause & exit
-if exist tmpall.txt echo "上次没有正常关闭（关机等方式），出现问题请使用轻度修复"
 ::获取tap适配器名称
 set "dnamet="
 for /f "skip=%wei%  tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined dnamet set "dnamet=%%a")

@@ -13,7 +13,7 @@ if "%1"=="h" goto begin
 if exist "%temp%\getadmin.vbs" ( del "%temp%\getadmin.vbs" )  
 pushd "%CD%"  
 cd /d "%~dp0"
-
+if exist tmpall.txt echo "上次没有正常关闭（关机等方式），出现问题请使用轻度修复"
 set count=1
 :check
 systeminfo>tmpall.txt
@@ -40,7 +40,6 @@ if %wei%==---------- call :checkd && goto check
 ::检测进程
 call :findprocess
 if "%tun%"=="1" echo "程序已经在运行" & pause & exit
-if exist tmpall.txt echo "上次没有正常关闭（关机等方式），出现问题请使用轻度修复"
 ::获取tap适配器名称
 set "dnamet="
 for /f "skip=%wei%  tokens=2* delims=:" %%a in (tmpall.txt) do (if not defined dnamet set "dnamet=%%a")
@@ -50,10 +49,10 @@ set dname="%var%"
 netsh interface ipv4 set interface %dname% enable
 ::启动gotun2socks进程
 start /min "" gotun2socks -enable-dns-cache -tun-address 192.168.222.1 -tun-gw 192.168.222.2 -tun-mask 255.255.255.0
+choice /t 1 /d y /n >nul
 ::修改tap ip
 netsh interface ipv4 add dns name=%dname% addr=8.8.8.8 index=1 validate=no
 netsh interface ip set address name=%dname% source=static addr=192.168.222.1 mask=255.255.255.0
-choice /t 1 /d y /n >nul
 ::获取主适配器名称和网卡名称第一个单词（ipv6）
 for /f "tokens=1,2 delims=:[] " %%a in ('findstr /n /r "200[0-9]:.*:.*:.*:.*:.*" tmpall.txt') do (set wei2=%%a&set minus=%%b)
 if not defined wei2 goto du
@@ -67,8 +66,6 @@ set mainname="%var%"
 set /a wei2=%wei2%-1
 set "mainnamef="
 for /f "skip=%wei2% tokens=2 delims=: " %%a in (tmpall.txt) do (if not defined mainnamef set "mainnamef=%%a")
-::清理垃圾
-del tmpall.txt
 ::修改主适配器dns
 ::netsh interface ip set interface %mainname% ignoredefaultroutes=enabled
 netsh interface ipv4 del dns name=%mainname% all
@@ -140,7 +137,7 @@ goto :EOF
 ::检测进程并修复
 :findprocess
 set tun=1
-tasklist|find /i "badvpn-tun2socks">nul||set tun=0
+tasklist|find /i "gotun2socks">nul||set tun=0
 for /f %%a in ('tasklist^|find /i /c "ShadowsocksR"') do (set ssr=%%a)
 if %ssr%==2 goto :EOF
 if %ssr%==1 taskkill /f /im ShadowsocksR* & echo 主程序出错正在结束重开
