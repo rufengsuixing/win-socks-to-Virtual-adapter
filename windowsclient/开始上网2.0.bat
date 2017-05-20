@@ -151,6 +151,7 @@ if %errorlevel% == 0 set sy=1
 findstr /c:"Windows 8" tmpall.txt
 if %errorlevel% == 0 set sy=1
 if defined sy (start ShadowsocksR-dotnet4.0.exe) else start ShadowsocksR-dotnet2.0.exe
+goto :EOF
 :GetUAC  
 echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"  
 echo UAC.ShellExecute "%~s0", "", "", "runas", 1 >> "%temp%\getadmin.vbs"  

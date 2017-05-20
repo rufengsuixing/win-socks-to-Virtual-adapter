@@ -26,11 +26,9 @@ windows客户端右键管理员运行 开始上网3.0.bat</p>
 <code>set pro_hide=1</code>保护检测是否隐藏执行<br></p>
 <p>因为防止dns污染，服务端解析dns，所以内网网站需要用hosts来访问，提供了一个host生成脚本</p>
 <h4>用法</h4>
-复制导航页的源文件代码到source.txt（导航部分就行）,修改findhost.bat里的dns服务器为内网dns服务器(可能还有内网ip范围默认10.)，运行脚本，生成result.txt，人工大概检查一下，运行修改host使用内网网站.bat,想恢复时点击还原hosts即可。
-<h4>more</h4>
-参数
-
-<p>更新日志：<br>
-3.0第一个版本<br>
+<p>复制导航页的源文件代码到source.txt（导航部分就行）,修改findhost.bat里的dns服务器为内网dns服务器(可能还有内网ip范围默认10.)，运行脚本，生成result.txt，人工大概检查一下，运行修改host使用内网网站.bat,想恢复时点击还原hosts即可。</p>
+<h4>更新日志：</h4>
+<p>3.0第一个版本<br>
 增加参数调整
+增加自动提权
 </p>
