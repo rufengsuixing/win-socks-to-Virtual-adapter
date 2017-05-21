@@ -1,7 +1,14 @@
+::Ȩ�޼��
 Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
-Md "%WinDir%\System32\test_permissions" 2>NUL||(Echo 请使用右键管理员身份运行！&&Pause >nul&&Exit)
+Md "%WinDir%\System32\test_permissions" 2>NUL||(goto GetUAC)
 Rd "%WinDir%\System32\test_permissions" 2>NUL
 NETSH INT IP RESET
 netsh winsock reset
-echo 请重启
+echo ������
 pause
+exit
+:GetUAC  
+echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"  
+echo UAC.ShellExecute "%~s0", "", "", "runas", 1 >> "%temp%\getadmin.vbs"  
+"%temp%\getadmin.vbs"  
+exit /B  
