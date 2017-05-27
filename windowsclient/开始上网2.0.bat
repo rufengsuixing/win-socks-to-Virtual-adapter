@@ -53,7 +53,7 @@ choice /t 1 /d y /n >nul
 ::修改tap ip
 netsh interface ipv4 add dns name=%dname% addr=8.8.8.8 index=1 validate=no
 netsh interface ip set address name=%dname% source=static addr=192.168.222.1 mask=255.255.255.0
-::获取主适配器名称和网卡名称第一个单词（ipv6）
+::获取主适配器名称和网卡名称（ipv6）
 for /f "tokens=1,2 delims=:[] " %%a in ('findstr /n /r "200[0-9]:.*:.*:.*:.*:.*" tmpall.txt') do (set wei2=%%a&set minus=%%b)
 if not defined wei2 goto du
 set /a wei2=%wei2%-%minus%-3
@@ -65,7 +65,10 @@ for /f "tokens=* delims= " %%a in ("%mainnamet%") do call :ie "%%a"
 set mainname="%var%"
 set /a wei2=%wei2%-1
 set "mainnamef="
-for /f "skip=%wei2% tokens=2 delims=: " %%a in (tmpall.txt) do (if not defined mainnamef set "mainnamef=%%a")
+for /f "skip=%wei2% tokens=2 delims=:" %%a in (tmpall.txt) do (if not defined mainnamef set "mainnamef=%%a")
+for /f "tokens=* delims= " %%a in ("%mainnamef%") do call :ie "%%a"
+set "mainnamef=%var:(=\(%"
+set "mainnamef=%mainnamef:)=\)%"
 ::修改主适配器dns
 ::netsh interface ip set interface %mainname% ignoredefaultroutes=enabled
 netsh interface ipv4 del dns name=%mainname% all
@@ -75,7 +78,7 @@ ipconfig /flushdns
 for /f "tokens=3 delims= " %%a in ('route print ^| findstr "\<0.0.0.0\>"') do (if not %%a==192.168.222.2 set gate=%%a)
 if not defined gate (call :a1)
 for /f "tokens=1 delims=." %%a in ('route print ^| findstr "TAP-Windows"') do (set ift=%%a)
-for /f "tokens=1 delims=." %%a in ('route print ^| findstr "%mainnamef%"') do (set iff=%%a)
+for /f "tokens=1 delims=." %%a in ('route print ^| findstr /C:"%mainnamef%"') do (set iff=%%a)
 ::make sure
 if "%ift%"=="" echo 失败 & goto getgate
 if "%iff%"=="" echo 失败 & goto getgate
@@ -141,6 +144,7 @@ tasklist|find /i "gotun2socks">nul||set tun=0
 for /f %%a in ('tasklist^|find /i /c "ShadowsocksR"') do (set ssr=%%a)
 if %ssr%==2 goto :EOF
 if %ssr%==1 taskkill /f /im ShadowsocksR* & echo 主程序出错正在结束重开
+if not exist tmpall.txt systeminfo>tmpall.txt
 findstr /c:"Windows 10" tmpall.txt
 if %errorlevel% == 0 set sy=1
 findstr /c:"Windows 8" tmpall.txt
