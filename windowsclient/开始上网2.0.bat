@@ -20,8 +20,10 @@ systeminfo>tmpall.txt
 ::连线检测(中文可去，只出现一次)
 for /f "tokens=2" %%a in ('netsh interface show interface') do (if %%a==已连接 set net=1)
 if not "%net%"=="1" (
-echo 请检查网络是否连接或你是英文系统
-pause
+echo 尝试连接bit-web
+netsh wlan connect BIT-Web
+choice /t 3 /d y /n >nul
+if %errorlevel%==1 echo 请检查网络是否连接或你是英文系统 & pause
 systeminfo>tmpall.txt
 )
 ::检测ipv6
