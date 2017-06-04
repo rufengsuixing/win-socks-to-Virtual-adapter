@@ -3,6 +3,7 @@ set protect=1
 set protectping=1
 set pro_dalay=20
 set pro_hide=1
+set language=cn
 ::权限检测
 Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
 Md "%WinDir%\System32\test_permissions" 2>NUL||(goto GetUAC)
@@ -20,10 +21,13 @@ systeminfo>tmpall.txt
 ::连线检测(中文可去，只出现一次)
 for /f "tokens=2" %%a in ('netsh interface show interface') do (if %%a==已连接 set net=1)
 if not "%net%"=="1" (
-echo 尝试连接bit-web
-netsh wlan connect BIT-Web
-choice /t 3 /d y /n >nul
-if %errorlevel%==1 echo 请检查网络是否连接或你是英文系统 & pause
+::echo 尝试连接bit-web
+::netsh wlan connect BIT-Web
+::for /f "tokens=1*delims=:" %%i in ('netsh wlan show interface') do set /a n+=1
+::%n%
+::if %errorlevel%==1 echo 请检查网络是否连接或你是英文系统 & pause
+echo 请检查网络是否连接或你是英文系统 & pause
+::choice /t 3 /d y /n >nul
 systeminfo>tmpall.txt
 )
 ::检测ipv6
@@ -82,7 +86,7 @@ if not defined gate (call :a1)
 for /f "tokens=1 delims=." %%a in ('route print ^| findstr "TAP-Windows"') do (set ift=%%a)
 for /f "tokens=1 delims=." %%a in ('route print ^| findstr /C:"%mainnamef%"') do (set iff=%%a)
 ::make sure
-if "%ift%"=="" echo 失败 & goto getgate
+if "%ift%"=="" call:xuni
 if "%iff%"=="" echo 失败 & goto getgate
 ::延时6秒
 choice /t 6 /d y /n >nul
@@ -152,6 +156,10 @@ if %errorlevel% == 0 set sy=1
 findstr /c:"Windows 8" tmpall.txt
 if %errorlevel% == 0 set sy=1
 if defined sy (start ShadowsocksR-dotnet4.0.exe) else start ShadowsocksR-dotnet2.0.exe
+goto :EOF
+:xuni
+for /f "tokens=1 delims=." %%a in ('route print ^| findstr "Hyper-V"') do (set ift=%%a)
+if "%ift%"=="" echo 失败 & goto getgate
 goto :EOF
 :GetUAC  
 echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"  
