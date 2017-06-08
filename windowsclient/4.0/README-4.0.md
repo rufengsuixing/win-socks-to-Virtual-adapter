@@ -17,7 +17,7 @@
 开机自启则 <code>systemctl enable udpgw.service</code></p>
 <h3>运行</h3>
 <p>linux 服务端<code>systemctl start udpgw.service</code> <br>
-windows客户端右键管理员运行 开始上网4.0.bat</p>
+windows客户端 安装后运行</p>
 <h3>more</h3>
 <p>因为防止dns污染，服务端解析dns，所以内网网站需要用hosts来访问，提供了一个host生成脚本</p>
 <h4>用法</h4>
