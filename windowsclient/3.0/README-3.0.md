@@ -13,9 +13,19 @@
 <p>pc 将windowsclient文件夹里的内容拷到shadowsocksr目录下<br>
 在linux服务器端，通过winscp将linuxserver/badvpn-udpgw文件拷入  编译自https://github.com/ambrop72/badvpn<br>
 <h4>服务端如果要用udp并实现后台监听</h4>
+网卡绑定一个为192.168.221.100的ip <br>
+example:debian<code>nano /etc/network/interfaces</code><br>
+加入以下内容<br>
+<code>auto eth0:0</code><br>
+<code>iface eth0:0 inet static</code><br>
+<code>address 192.168.221.100</code><br>
+<code>netmask 255.255.255.0</code><br>
 将 udpgw.service 复制到/etc/systemd/system/下<br>
 <code>systemctl daemon-reload</code><br>
 开机自启则 <code>systemctl enable udpgw.service</code></p>
+
+
+
 <h3>运行</h3>
 <p>linux 服务端<code>systemctl start udpgw.service</code> <br>
 windows客户端右键管理员运行 开始上网3.0.bat</p>
