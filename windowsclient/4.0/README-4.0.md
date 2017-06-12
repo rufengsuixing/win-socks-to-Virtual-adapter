@@ -7,7 +7,7 @@
 <h3>注意事项</h3>
 适用于IPV6服务端，服务端为ipv4需自行修改route<br>
 进程启动shadowsocksr<br>
-启用udp需要在服务器上进行端口监听（tested on debian）</p>
+启用udp需要在服务器上进行端口监听（tested on debian）同时代理不能选择绕过局域网</p>
 <h3>安装</h3>
 <p>pc 将本文件夹里的内容拷到shadowsocksr目录下<br>
 在linux服务器端，通过winscp将linuxserver/badvpn-udpgw文件拷入  编译自https://github.com/ambrop72/badvpn<br>
