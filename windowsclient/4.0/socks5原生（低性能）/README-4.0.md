@@ -7,23 +7,9 @@
 <h3>注意事项</h3>
 适用于IPV6服务端，服务端为ipv4需自行修改route<br>
 进程启动shadowsocksr<br>
-启用udp需要在服务器上进行端口监听（tested on debian）同时代理不能选择绕过局域网，如果没有服务器控制权可以使用2.0版本的gotun2socks来实现udp，但是不稳定</p>
+如果没有服务器控制权使用gotun2socks来实现udp，但是不稳定</p>
 <h3>安装</h3>
 <p>pc 将本文件夹里的内容拷到shadowsocksr目录下<br>
-在linux服务器端，通过winscp将linuxserver/badvpn-udpgw文件拷入  编译自https://github.com/ambrop72/badvpn<br>
-<h4>服务端如果要用udp并实现后台监听</h4>
-网卡绑定一个为192.168.221.100的ip <br>
-example:debian<code>nano /etc/network/interfaces</code><br>
-加入以下内容<br>
-<code>auto eth0:0</code><br>
-<code>iface eth0:0 inet static</code><br>
-<code>address 192.168.221.100</code><br>
-<code>netmask 255.255.255.0</code><br>
-将 udpgw.service 复制到/etc/systemd/system/下<br>
-<code>systemctl daemon-reload</code><br>
-开机自启则 <code>systemctl enable udpgw.service</code></p>
-<h3>运行</h3>
-<p>linux 服务端<code>systemctl start udpgw.service</code> <br>
 windows客户端 安装后运行</p>
 <h3>more</h3>
 <p>因为防止dns污染，服务端解析dns，所以内网网站需要用hosts来访问，提供了一个host生成脚本</p>
