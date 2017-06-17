@@ -2,7 +2,7 @@
 Rd "%WinDir%\system32\test_permissions" >NUL 2>NUL
 Md "%WinDir%\System32\test_permissions" 2>NUL||(goto GetUAC)
 Rd "%WinDir%\System32\test_permissions" 2>NUL
-
+:start
 cd /d "%~dp0"
 systeminfo>tmpall.txt
 
@@ -13,7 +13,7 @@ echo %sy%>sy
 :next
 ::检测安装tap驱动
 for /f "tokens=1 delims=[] " %%a in ('find /n "TAP-Windows" tmpall.txt') do (set wei=%%a)
-if "%wei%"=="----------" start /w "" tap-windows-9.9.2_3.exe || (echo 请手动安装tap-windows-9.9.2_3.exe后继续 & pause)
+if "%wei%"=="----------" start /w "" tap-windows-9.9.2_3.exe || (echo 请手动安装tap-windows-9.9.2_3.exe后继续 & pause) & goto start
 
 
 ::获取tap适配器名称
